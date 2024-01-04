@@ -4,6 +4,11 @@ import { StarIcon } from "react-native-heroicons/solid";
 import { MapPinIcon } from "react-native-heroicons/outline";
 import { urlFor } from "../sanity";
 import { useNavigation } from "@react-navigation/native";
+import { useDispatch, useSelector } from "react-redux";
+
+import { selectRestaurant } from "../features/restaurantSlice";
+import { setModalVisible } from "../features/modalSlice";
+import { selectBasketItems } from "../features/basketSlice";
 
 const RestaurantCard = ({
   id,
@@ -18,23 +23,32 @@ const RestaurantCard = ({
   lat,
 }) => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const restaurant = useSelector(selectRestaurant);
+  const items = useSelector(selectBasketItems);
+
+  const handleSelectRestaurant = () => {
+    if (restaurant.title !== title && items.length > 0) {
+      dispatch(setModalVisible(true));
+    } else {
+      navigation.navigate("Restaurant", {
+        id,
+        imgUrl,
+        title,
+        rating,
+        genre,
+        address,
+        short_description,
+        dishes,
+        long,
+        lat,
+      });
+    }
+  };
 
   return (
     <TouchableOpacity
-      onPress={() => {
-        navigation.navigate("Restaurant", {
-          id,
-          imgUrl,
-          title,
-          rating,
-          genre,
-          address,
-          short_description,
-          dishes,
-          long,
-          lat,
-        });
-      }}
+      onPress={handleSelectRestaurant}
       className="bg-white mr-3 shadow"
     >
       <Image

@@ -1,4 +1,11 @@
-import { View, Text, Image, TextInput, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  TextInput,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
 import React, { useState, useEffect, useLayoutEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -8,12 +15,18 @@ import {
   MagnifyingGlassIcon,
   AdjustmentsVerticalIcon,
 } from "react-native-heroicons/outline";
+import { useSelector } from "react-redux";
+
 import Categories from "../components/Categories";
 import FeaturedRow from "../components/FeaturedRow";
 import sanityClient from "../sanity";
+import ErrorModal from "../components/ErrorModal";
+
+import { selectBasketItems } from "../features/basketSlice";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
+  const items = useSelector(selectBasketItems);
 
   const [featuredCategories, setFeaturedCategories] = useState([]);
 
@@ -45,6 +58,13 @@ const HomeScreen = () => {
 
   return (
     <SafeAreaView className="bg-white pt-5">
+      {/* Error Modal */}
+      <ErrorModal
+        // modalVisible={modalVisible}
+        // setModalVisible={setModalVisible}
+        errorCode="basketStarted"
+      />
+
       {/* Header */}
       <View className="flex-row pb-3 items-center mx-4 space-x-2">
         <Image
@@ -61,6 +81,14 @@ const HomeScreen = () => {
             <ChevronDownIcon size={20} color="#00CCBB" />
           </Text>
         </View>
+        {items?.length > 0 && (
+          <TouchableOpacity
+            onPress={() => navigation.navigate("Basket")}
+            className="bg-[#00CCBB] w-8 h-8 mr-2 rounded-full items-center justify-center"
+          >
+            <Text className="text-white font-bold">{items?.length}</Text>
+          </TouchableOpacity>
+        )}
         <UserIcon size={35} color="#00CCBB" />
       </View>
 

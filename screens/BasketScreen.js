@@ -2,8 +2,12 @@ import { View, Text, TouchableOpacity, Image, ScrollView } from "react-native";
 import React, { useMemo, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
-import { selectRestaurant } from "../features/restaurantSlice";
 import {
+  removeRestaurant,
+  selectRestaurant,
+} from "../features/restaurantSlice";
+import {
+  clearBasket,
   removeFromBasket,
   selectBasketItems,
   selectBasketTotal,
@@ -29,6 +33,18 @@ const BasketScreen = () => {
 
     setGroupedItemsInBasket(groupedItems);
   }, [items]);
+
+  const handlePlaceOrder = () => {
+    if (!items.length > 0) return;
+    navigation.navigate("PreparingOrderScreen");
+  };
+
+  const handleCancelOrder = () => {
+    if (!items.length > 0) return;
+    dispatch(clearBasket());
+    dispatch(removeRestaurant());
+    navigation.navigate("Home");
+  };
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -90,7 +106,19 @@ const BasketScreen = () => {
           ))}
         </ScrollView>
 
-        <View className="p-5 bg-white mt-5 space-y-4">
+        <View className="flex-row justify-end pr-3 mt-2">
+          <View className="flex-row items-center px-4 py-2 bg-white rounded-full">
+            <Text className="text-red-500 text-sm">Cancel Order</Text>
+            <TouchableOpacity
+              onPress={handleCancelOrder}
+              className="bg-gray-200 rounded-full ml-2"
+            >
+              <XCircleIcon width={30} height={30} color="red" />
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        <View className="p-5 bg-white mt-2 space-y-4">
           <View className="flex-row justify-between">
             <Text className="text-gray-400">Subtotal</Text>
             <Text className="text-gray-400">
@@ -113,8 +141,11 @@ const BasketScreen = () => {
           </View>
 
           <TouchableOpacity
-            onPress={() => navigation.navigate("PreparingOrderScreen")}
-            className="rounded-lg bg-[#00CCBB] p-4"
+            onPress={handlePlaceOrder}
+            disabled={!items.length}
+            className={`rounded-lg ${
+              items.length > 0 ? "bg-[#00CCBB]" : "bg-gray-400"
+            } p-4`}
           >
             <Text className="text-center text-white text-lg">Place Order</Text>
           </TouchableOpacity>

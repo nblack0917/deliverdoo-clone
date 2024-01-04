@@ -22,11 +22,25 @@ export const restaurantSlice = createSlice({
     setRestaurant: (state, action) => {
       state.restaurant = action.payload;
     },
+    removeRestaurant: (state) => {
+      state.restaurant = {
+        id: null,
+        imgUrl: null,
+        title: null,
+        rating: null,
+        genre: null,
+        address: null,
+        short_description: null,
+        dishes: null,
+        lat: null,
+        long: null,
+      };
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { setRestaurant } = restaurantSlice.actions;
+export const { setRestaurant, removeRestaurant } = restaurantSlice.actions;
 
 export const selectRestaurant = (state) => state.restaurant.restaurant;
 
