@@ -16,5 +16,11 @@ export default defineType({
       title: 'Image of category',
       type: 'image',
     }),
+    defineField({
+      name: 'restaurants',
+      title: 'Restaurants',
+      type: 'array',
+      of: [{type: 'reference', to: [{type: 'restaurant'}]}],
+    }),
   ],
 })

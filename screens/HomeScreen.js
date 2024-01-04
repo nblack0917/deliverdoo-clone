@@ -23,12 +23,17 @@ import sanityClient from "../sanity";
 import ErrorModal from "../components/ErrorModal";
 
 import { selectBasketItems } from "../features/basketSlice";
+import CategoryColumn from "../components/CategoryColumn";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
   const items = useSelector(selectBasketItems);
 
   const [featuredCategories, setFeaturedCategories] = useState([]);
+  const [showCategories, setShowCategories] = useState({
+    visible: false,
+    name: "",
+  });
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -110,30 +115,27 @@ const HomeScreen = () => {
         contentContainerStyle={{ paddingBottom: 150 }}
       >
         {/* Categories */}
-        <Categories />
+        <Categories setShowCategories={setShowCategories} />
 
-        {/* Featured Rows */}
+        {!showCategories.visible ? (
+          <>
+            {/* Featured Rows */}
 
-        {featuredCategories?.map((category) => (
-          <FeaturedRow
-            key={category._id}
-            id={category._id}
-            title={category.name}
-            description={category.short_description}
+            {featuredCategories?.map((category) => (
+              <FeaturedRow
+                key={category._id}
+                id={category._id}
+                title={category.name}
+                description={category.short_description}
+              />
+            ))}
+          </>
+        ) : (
+          <CategoryColumn
+            showCategories={showCategories}
+            setShowCategories={setShowCategories}
           />
-        ))}
-        {/* <FeaturedRow
-          id="1234"
-          title="Tasty Discounts"
-          description="Everyone's been enjoying these juicy discounts!"
-          featuredCategory="discounts"
-        />
-        <FeaturedRow
-          id="12345"
-          title="Offers near you!"
-          description="Why not support your local restaurant tonight!"
-          featuredCategory="offers"
-        /> */}
+        )}
       </ScrollView>
     </SafeAreaView>
   );

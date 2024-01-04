@@ -1,9 +1,14 @@
 import { View, Text, TouchableOpacity, Image } from "react-native";
 import React from "react";
 
-const CategoryCard = ({ imgUrl, title }) => {
+const CategoryCard = ({ imgUrl, title, setShowCategories }) => {
   return (
-    <TouchableOpacity className="mr-2 relative">
+    <TouchableOpacity
+      className="mr-2 relative"
+      onPress={() => {
+        setShowCategories({ visible: true, name: title });
+      }}
+    >
       <Image
         source={{
           uri: imgUrl,
